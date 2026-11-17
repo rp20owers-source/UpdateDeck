@@ -1,4 +1,4 @@
-# UpdateDeck 2.0.2
+# UpdateDeck 2.0.3
 
 This PC appears directly above Settings. It reports motherboard brand/model/revision, CPU model/socket/cores/threads/clocks/cache, each RAM module and slot/type/capacity/reported speed/voltage, GPU/driver/dedicated-memory metadata, disk model/capacity/bus/media/firmware, network adapters, displays, BIOS and Windows details. Data is read locally from bounded Windows CIM queries and display-driver registry metadata. No hardware code is loaded and no serial numbers, passwords or license keys are queried. Missing fields remain Not reported; clocks are Windows snapshots, not live benchmarks. Standard Windows inventory does not expose every GPU clock, temperature, power-supply or chipset specification. New profiles default to Dark; saved appearance choices remain supported.
 
@@ -14,7 +14,7 @@ A native Windows software maintenance application with real discovery, structure
 
 Choose the release matching your PC's architecture.
 
-- **Portable:** extract the complete `UpdateDeck-2.0.2-win-x64-Portable.zip` or `win-arm64` ZIP, then run `UpdateDeck.exe`. Keep all bundled files together. A .NET SDK or separately installed .NET runtime is not required.
+- **Portable:** extract the complete `UpdateDeck-2.0.3-win-x64-Portable.zip` or `win-arm64` ZIP, then run `UpdateDeck.exe`. Keep all bundled files together. A .NET SDK or separately installed .NET runtime is not required.
 - **Installer:** run the matching `Setup.exe`. Defaults to a per-user install; all-users installation uses normal Windows elevation. Shortcuts and an uninstall entry are provided. Settings survive upgrades and uninstall.
 
 Minimum technical OS: Windows 10 build **19041** (version 2004) or newer. Windows 11 is the primary target. Windows 10 compatibility does not imply Microsoft security support: use an edition / ESU / LTSC configuration still serviced by Microsoft. LTSC 2021 meets the technical floor; LTSC 2019 and older do not meet this product's floor. ARM64 is built but has not been run on ARM64 hardware. x86 is not distributed. macOS and Linux are not supported.
@@ -28,7 +28,7 @@ Restart detection distinguishes Windows Update/servicing requirements from queue
 1. Open UpdateDeck. It reads local inventory first, then checks the catalog when enabled and connected.
 2. Use **Installed Apps** to search, filter, sort, inspect raw version/channel/identity evidence, or ignore an application. Click column headers for ascending/descending numeric version ordering.
 3. **Preview plan** refreshes metadata and shows eligible operations, publisher handoffs and deferral reasons without launching anything. **Update All**, selected checkboxes and individual **Update** buttons use the same policy engine and refresh again before execution. No global `winget upgrade --all` is used.
-4. Routine eligible applications install sequentially. Unknown versions, architectures or scopes, ambiguous identities, pins, channel changes, sensitive software, Windows Update/servicing restart requirements, running apps, and insufficient disk space defer installation. A registered redistributable/bootstrapper icon is not treated as proof of the installed application's architecture.
+4. Routine eligible applications install sequentially. Unknown versions, architectures or scopes, ambiguous identities, pins, channel changes, sensitive software, Windows Update/servicing restart requirements, running apps, and insufficient disk space defer installation. A registered redistributable/bootstrapper icon is not treated as proof of the installed application's architecture; strict comma-separated numeric Windows version resources are normalized only when matching executable evidence.
 5. The default policy opens at most two non-driver vendor handoffs after automatic work. Additional managers are available individually. Change this in Settings. A handoff is never recorded as a successful installation.
 6. Use **Recheck remaining** after the publisher finishes. History distinguishes verified success, installer execution awaiting verification, failure, interaction, interruption and handoff.
 

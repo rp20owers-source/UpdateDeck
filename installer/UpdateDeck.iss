@@ -7,7 +7,7 @@
 #ifndef ArtifactDir
   #error ArtifactDir must be provided
 #endif
-#define AppVersion "2.0.2"
+#define AppVersion "2.0.3"
 [Setup]
 AppId={{0EF48617-880D-479C-B39E-24B886120B80}
 AppName=UpdateDeck

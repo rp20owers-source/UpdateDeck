@@ -2,6 +2,8 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using UpdateDeck.Core;
 
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("UpdateDeck.Tests")]
+
 namespace UpdateDeck.Windows;
 
 /// <summary>Reads resources and PE headers only. It never loads an application or plugin as executable code.</summary>
@@ -9,6 +11,7 @@ public static partial class ExecutableMetadata
 {
     [GeneratedRegex(@"[^\p{L}\p{Nd}]+")]private static partial Regex NonIdentity();
     [GeneratedRegex(@"(?:CORPORATION|INCORPORATED|LIMITED|CORP|INC|LLC|LTD)$")]private static partial Regex LegalSuffix();
+    [GeneratedRegex(@"\A[0-9]+(?:,[0-9]+){1,3}\z")]private static partial Regex CommaSeparatedResourceVersion();
     public static bool PublisherTextMatches(string publisher,string company,string product)
     {
         string a=LegalSuffix().Replace(Normalize(publisher),""),b=LegalSuffix().Replace(Normalize(company),"");
@@ -24,6 +27,17 @@ public static partial class ExecutableMetadata
         try{return File.Exists(value)?Path.GetFullPath(value):null;}catch(ArgumentException){return null;}catch(NotSupportedException){return null;}
     }
     public static bool NetworkPath(string path)=>path.StartsWith(@"\\?\UNC\",StringComparison.OrdinalIgnoreCase)||(path.StartsWith(@"\\",StringComparison.Ordinal)&&!path.StartsWith(@"\\?\",StringComparison.Ordinal));
+    internal static bool ResourceVersionMatches(string installed,string? resourceVersion)
+    {
+        string? normalized=resourceVersion;
+        if(resourceVersion is not null&&!Versioning.Known(resourceVersion))
+        {
+            var value=resourceVersion.Trim();
+            if(!CommaSeparatedResourceVersion().IsMatch(value))return false;
+            normalized=value.Replace(',','.');
+        }
+        return Versioning.Compare(installed,normalized)==0;
+    }
     public static Software EnrichRegistration(Software app)
     {
         try
@@ -36,7 +50,7 @@ public static partial class ExecutableMetadata
             var info=FileVersionInfo.GetVersionInfo(executable);
             var publisher=Normalize(app.Publisher);var company=Normalize(info.CompanyName??"");var name=Normalize(app.Name);var product=Normalize(info.ProductName??"");
             if(!PublisherTextMatches(app.Publisher,info.CompanyName??"",info.ProductName??"")||product.Length<3||!name.Contains(product,StringComparison.Ordinal))return app;
-            bool versionMatches=Versioning.Compare(app.InstalledVersion,info.ProductVersion)==0||Versioning.Compare(app.InstalledVersion,info.FileVersion)==0;
+            bool versionMatches=ResourceVersionMatches(app.InstalledVersion,info.ProductVersion)||ResourceVersionMatches(app.InstalledVersion,info.FileVersion);
             if(!versionMatches)return app;
             string directory=Path.GetDirectoryName(executable)!;
             if(app.InstallLocation.Length>0&&!IdentityResolver.Normalize(app.InstallLocation).Equals(IdentityResolver.Normalize(directory),StringComparison.OrdinalIgnoreCase)&&!executable.StartsWith(app.InstallLocation.TrimEnd('\\')+"\\",StringComparison.OrdinalIgnoreCase))return app;

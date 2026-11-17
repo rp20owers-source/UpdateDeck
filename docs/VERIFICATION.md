@@ -1,6 +1,12 @@
-This maintenance build fixes over-broad restart blocking: queued file operations are advisory, while Windows Update/servicing restart requirements and unreadable restart state still block installations. Installer-reported restart results still stop subsequent work, and history reconciliation retains all pending-restart signals. Unknown inventory and publisher workflows no longer inflate deferred-update counts. The latest hotfix report records current validation; earlier long-idle/installer observations describe the preceding preview.
+# Verification — UpdateDeck 2.0.3 Preview
 
-# Verification — UpdateDeck 2.0.2 Preview
+The 2.0.3 live investigation found a valid registered executable whose PE version resource used comma-separated numeric components, while the registry used dotted components. The old comparison rejected this otherwise matching product/version evidence, leaving its native architecture unknown and preventing a routine update. Executable metadata matching now normalizes only strict comma-separated numeric resource versions; malformed or nonnumeric resource strings remain rejected. The read-only scan and plan preview started no installers or vendor managers. The automated suite passes 456 tests.
+
+## Historical 2.0.2 preview evidence
+
+The 2.0.2 maintenance build fixed over-broad restart blocking: queued file operations are advisory, while Windows Update/servicing restart requirements and unreadable restart state still block installations. Installer-reported restart results still stop subsequent work, and history reconciliation retains all pending-restart signals. Unknown inventory and publisher workflows no longer inflate deferred-update counts. The latest hotfix report records current validation; earlier long-idle/installer observations describe the preceding preview.
+
+## 2.0.2 verification
 
 This is a working native Windows engineering preview. It implements real discovery and update execution paths, with explicit gaps before production distribution. Testing never mass-updated or silently changed unrelated software on the development PC.
 

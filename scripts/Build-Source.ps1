@@ -1,6 +1,6 @@
 #Requires -Version 7.4
 [CmdletBinding()]
-param([string]$OutputPath=(Join-Path $PSScriptRoot '..\..\UpdateDeck-2.0.2-Source.zip'))
+param([string]$OutputPath=(Join-Path $PSScriptRoot '..\..\UpdateDeck-2.0.3-Source.zip'))
 $ErrorActionPreference='Stop'
 Set-StrictMode -Version Latest
 $root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
