@@ -74,6 +74,16 @@ public class PolicyTests
     [Theory][InlineData("ignored")][InlineData("ambiguous")][InlineData("pinned")][InlineData("pinUnknown")][InlineData("versionUnknown")][InlineData("downgrade")][InlineData("stale")][InlineData("channel")][InlineData("sensitive")]
     public void BlocksUnsafePlans(string kind){var a=Fixture.App();var p=new Preferences();switch(kind){case"ignored":p.Ignored.Add(a.Id);break;case"ambiguous":a=a with{Ambiguous=true};break;case"pinned":a=a with{Pinned=true};break;case"pinUnknown":a=a with{PinVerified=false};break;case"versionUnknown":a=a with{InstalledVersion="Unknown"};break;case"downgrade":a=a with{AvailableVersion="0.9"};break;case"stale":a=a with{CheckedAt=DateTimeOffset.UtcNow.AddHours(-1)};break;case"channel":a=a with{InstalledVersion="1.0-beta",AvailableVersion="1.1"};break;case"sensitive":a=a with{Name="Graphics Driver"};break;}Assert.NotNull(Reason(a,p));}
     [Fact]public void BlocksRebootRunningAndLowDisk(){Assert.NotNull(Reason(Fixture.App(),restart:true));Assert.NotNull(Reason(Fixture.App(),running:true));Assert.NotNull(Reason(Fixture.App(),disk:100));}
+    [Fact]public void SystemSensitiveUpdatesAreDirectedOnlyToPublisherWorkflow()
+    {
+        var reason=Reason(Fixture.App() with{Name="Tailscale",PackageId=""})!;
+        Assert.Contains("publisher workflow",reason);Assert.DoesNotContain("reviewed action",reason);
+    }
+    [Fact]public void CautionUpdatesExplainTheirIndividualReviewRoute()
+    {
+        var reason=Reason(Fixture.App() with{Name="Blender",PackageId=""})!;
+        Assert.Contains("requires individual review",reason);Assert.Contains("reviewed action when available",reason);
+    }
     [Fact]public void DeterministicPlanDeduplicatesOperationsAndManagers(){var a=Fixture.App("b");var b=Fixture.App("a");var c=Fixture.App("c") with{VendorId="adobe",State=UpdateState.VendorManaged};var d=c with{Id="d"};var plan=UpdatePolicy.Plan([a,b,a,c,d],new(),DateTimeOffset.UtcNow,false,_=>false,long.MaxValue);Assert.Equal(new[]{b.Id,a.Id},plan.Automatic.Select(x=>x.App.Id));Assert.Single(plan.Handoffs);}
     [Fact]public void DriverManagersExcludedFromAutomaticHandoffs(){var a=Fixture.App() with{VendorId="nvidia",State=UpdateState.VendorManaged,IsDriver=true};Assert.Empty(UpdatePolicy.Plan([a],new(),DateTimeOffset.UtcNow,false,_=>false,long.MaxValue).Handoffs);}
     [Theory][InlineData("BIOS Update",Risk.High)][InlineData("NVIDIA Driver",Risk.SystemSensitive)][InlineData("Blender",Risk.Caution)][InlineData("Python",Risk.Caution)][InlineData("Simple Editor",Risk.Routine)]

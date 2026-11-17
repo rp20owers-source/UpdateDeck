@@ -1,6 +1,6 @@
 # Release construction and signing
 
-Version 2.0.1 is an unsigned development preview. Build on Windows with PowerShell 7.4+, the pinned .NET SDK 10.0.402 (or a compatible SDK permitted by global.json), and an appropriately licensed Inno Setup 7 compiler. Development artifacts used Inno Setup 7.1.1. Commercial builders must obtain any license required by [Inno Setup's current terms](https://jrsoftware.org/inno-setup); the compiler is not shipped in the application.
+Version 2.0.2 is an unsigned development preview. Build on Windows with PowerShell 7.4+, the pinned .NET SDK 10.0.402 (or a compatible SDK permitted by global.json), and an appropriately licensed Inno Setup 7 compiler. Development artifacts used Inno Setup 7.1.1. Commercial builders must obtain any license required by [Inno Setup's current terms](https://jrsoftware.org/inno-setup); the compiler is not shipped in the application.
 
 ## Build from a stable source tree
 
@@ -15,19 +15,19 @@ The release script repeats locked restore/tests, publishes fresh uniquely named 
 
 The default release destination is `../releases`:
 
-- `UpdateDeck-2.0.1-win-x64-Setup.exe`
-- `UpdateDeck-2.0.1-win-arm64-Setup.exe`
-- `UpdateDeck-2.0.1-win-x64-Portable.zip`
-- `UpdateDeck-2.0.1-win-arm64-Portable.zip`
+- `UpdateDeck-2.0.2-win-x64-Setup.exe`
+- `UpdateDeck-2.0.2-win-arm64-Setup.exe`
+- `UpdateDeck-2.0.2-win-x64-Portable.zip`
+- `UpdateDeck-2.0.2-win-arm64-Portable.zip`
 - `SHA256SUMS.txt` and `release.json`
 
 `release.json` records the source tree SHA-256, build ID, exact framework runtime, compatibility, architecture, signing state and expected file list. Files are copied through hash-checked temporary names; metadata is promoted last. `Verify-Release.ps1` audits hashes, safe Windows archive paths, file/directory collisions, links, absence of local/development files, every portable EXE/DLL architecture (including neutral managed IL), nine named native dependency machines, setup bootstrapper and exactly the Core/Desktop 10.0.15 framework pair. Every decompressed entry is bounded and checked for actual size and CRC-32; the report includes per-payload SHA-256 values. Metadata parsing rejects duplicate/case-aliased JSON properties and invalid numeric/signing types. A source archive includes `SOURCE-INDEX.json` with per-file hashes; source packaging refuses a tree different from the recorded release. `Verify-Source.ps1` checks it independently, requiring exact indexed paths and complete per-file coverage, with bounded CRC-checked reads. Dependency lockfiles record NuGet content hashes.
 
 ```powershell
 .\scripts\Verify-Release.ps1 -ReleaseDirectory '..\releases'
-.\scripts\Verify-Source.ps1 -ArchivePath '..\UpdateDeck-2.0.1-Source.zip'
+.\scripts\Verify-Source.ps1 -ArchivePath '..\UpdateDeck-2.0.2-Source.zip'
 .\scripts\Test-ArtifactGuards.ps1 -ReleaseDirectory '..\releases' `
-  -SourceArchive '..\UpdateDeck-2.0.1-Source.zip' `
+  -SourceArchive '..\UpdateDeck-2.0.2-Source.zip' `
   -WorkDirectory 'C:\chosen-scratch-folder' -ReportPath 'C:\chosen-scratch-folder\guards.json'
 ```
 

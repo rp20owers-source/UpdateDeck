@@ -7,7 +7,7 @@
 #ifndef ArtifactDir
   #error ArtifactDir must be provided
 #endif
-#define AppVersion "2.0.1"
+#define AppVersion "2.0.2"
 [Setup]
 AppId={{0EF48617-880D-479C-B39E-24B886120B80}
 AppName=UpdateDeck
@@ -69,7 +69,7 @@ begin
       SuppressibleMsgBox('The installed UpdateDeck version could not be verified. Inspect its uninstall registration before replacing it.', mbError, MB_OK, IDOK);
       Result := False;
     end
-    else if ComparePackedVersion(Packed, PackVersionComponents(2, 0, 1, 0)) > 0 then
+    else if ComparePackedVersion(Packed, PackVersionComponents(2, 0, 2, 0)) > 0 then
     begin
       SuppressibleMsgBox('A newer UpdateDeck version is installed. This preview will not downgrade it.', mbError, MB_OK, IDOK);
       Result := False;

@@ -18,7 +18,7 @@ try{
     [UpdateDeck.Packaging.ArchiveIntegrity]::ValidatePaths([string[]]@($entries.Keys))
     if(-not $entries.ContainsKey('SOURCE-INDEX.json') -or $entries['SOURCE-INDEX.json'].Length -gt 2MB){throw 'Missing or oversized source index'}
     $manifest=ConvertFrom-UniqueJson (Read-ArchiveEntryBytes $entries['SOURCE-INDEX.json'] 2MB)
-    if(($manifest.schema -isnot [long] -and $manifest.schema -isnot [int]) -or ($manifest.fileCount -isnot [long] -and $manifest.fileCount -isnot [int]) -or $manifest.files -isnot [array] -or $manifest.schema -ne 1 -or $manifest.product -cne 'UpdateDeck' -or $manifest.version -cne '2.0.1' -or $manifest.fileCount -ne @($manifest.files).Count){throw 'Invalid source index identity or count'}
+    if(($manifest.schema -isnot [long] -and $manifest.schema -isnot [int]) -or ($manifest.fileCount -isnot [long] -and $manifest.fileCount -isnot [int]) -or $manifest.files -isnot [array] -or $manifest.schema -ne 1 -or $manifest.product -cne 'UpdateDeck' -or $manifest.version -cne '2.0.2' -or $manifest.fileCount -ne @($manifest.files).Count){throw 'Invalid source index identity or count'}
     $ordered=[Collections.Generic.SortedDictionary[string,string]]::new([StringComparer]::Ordinal)
     $indexed=[Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
     foreach($file in $manifest.files){

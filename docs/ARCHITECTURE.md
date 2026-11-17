@@ -35,7 +35,7 @@ Candidate indexes narrow comparisons to shared record IDs, product codes, famili
 
 Raw installed version values remain visible. A registry/catalog disagreement for one exact registration produces Attention rather than an automatic mapped-version assumption. Numeric and semantic versions, dotted dates and arbitrary-size numeric components are compared conservatively. Unknown syntax is not current or an upgrade. Beta/RC/stable track changes and explicit channels without a reviewed CLI selector are deferred. Current badges age out after 30 minutes. WinGet also requires source-index freshness within that period, independently of query time. Unicode digit scripts and empty prerelease/build identifiers are unsupported rather than passed to numeric parsing. Conflicting raw evidence remains blocked even if a later presentation state changes.
 
-Installed architecture is recovered only from related registered application resources/PE headers or a read-only cached MSI template. Uninstall/setup executables and registry view alone are not architecture proof. Unknown architecture/scope disables automatic work. The application never loads discovered plugin DLLs or executes files to learn their version.
+Installed architecture is recovered only from related registered application resources/PE headers or a read-only cached MSI template, which takes precedence over a registered icon executable. Uninstall/setup/redistributable bootstrapper executables and registry view alone are not architecture proof. Unknown architecture/scope disables automatic work. The application never loads discovered plugin DLLs or executes files to learn their version.
 
 ## WinGet trust and exact updates
 

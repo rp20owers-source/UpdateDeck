@@ -17,4 +17,4 @@ foreach($file in $files){$ordered.Add($file.path,$file)}
 $files=@($ordered.Values)
 $index=($files | ForEach-Object { $_.sha256+'  '+$_.path+"`n" }) -join ''
 $hash=[Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($index))).ToLowerInvariant()
-[pscustomobject]@{schema=1;product='UpdateDeck';version='2.0.1';treeSha256=$hash;fileCount=$files.Count;files=$files}
+[pscustomobject]@{schema=1;product='UpdateDeck';version='2.0.2';treeSha256=$hash;fileCount=$files.Count;files=$files}

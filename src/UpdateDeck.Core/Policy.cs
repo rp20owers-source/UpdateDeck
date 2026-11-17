@@ -35,7 +35,8 @@ public static class UpdatePolicy
         if(!app.InstalledChannel.Equals(app.AvailableChannel,StringComparison.OrdinalIgnoreCase))return "The installed and target release channels differ or could not be reconciled. Use the publisher's updater.";
         if(app.EffectiveDelivery==UpdateDelivery.WinGet&&app.InstalledChannel.Length>0)return "This named release channel cannot be selected explicitly by the reviewed WinGet command. Use the publisher's updater.";
         var risk=Classify(app);
-        if(risk!=Risk.Routine&&!(supervised&&risk==Risk.Caution&&app.EffectiveDelivery==UpdateDelivery.WinGet&&app.VendorId.Length==0)) return "Supervised update recommended for compatibility-sensitive software. Use its reviewed individual action or publisher workflow.";
+        if(risk is Risk.High or Risk.SystemSensitive) return "System-sensitive or high-risk software must use its publisher workflow. UpdateDeck will not run it.";
+        if(risk==Risk.Caution&&!(supervised&&app.EffectiveDelivery==UpdateDelivery.WinGet&&app.VendorId.Length==0)) return "Compatibility-sensitive software requires individual review and is not included in automatic updates. Use the reviewed action when available, otherwise the publisher workflow.";
         if(app.CheckedAt==null||now-app.CheckedAt>TimeSpan.FromMinutes(30)||app.CheckedAt-now>TimeSpan.FromMinutes(2)) return "Update metadata is stale or its timestamp is invalid. Check again before installing.";
         if(app.EffectiveDelivery==UpdateDelivery.WinGet&&!CatalogFreshness.IsFresh(app.CatalogUpdatedAt,now))return "The WinGet catalog cache is older than 30 minutes or its refresh time could not be verified. Refresh the official source in WinGet and check again; source policy is not overridden.";
         if(pendingRestart) return "Restart Windows before starting another installation.";

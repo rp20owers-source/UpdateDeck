@@ -32,7 +32,7 @@ public sealed class RegistryInventory : IInventorySource
                             app=app with{Kind=SoftwareKind.Game,PackageId="steam:"+id[10..],Provider="Steam",VendorId="steam",State=UpdateState.VendorManaged,InstallerType="Steam game",Risk=Risk.Caution,Explanation="Steam manages this game's application and content. Open Steam manually; Update All does not start game downloads.",Evidence=app.Evidence.Append("Steam app registration and uninstall protocol agree").ToArray()};
                         if(app.Kind!=SoftwareKind.Game&&id.StartsWith("GOG.com Games ",StringComparison.OrdinalIgnoreCase)&&Read("UninstallString").Contains("unins",StringComparison.OrdinalIgnoreCase))
                             app=app with{Kind=SoftwareKind.Game,Provider="GOG",VendorId="gog",State=UpdateState.VendorManaged,Risk=Risk.Caution,InstallerType="GOG game",Explanation="GOG game registration. Manage this title in GOG GALAXY or with its official offline installer."};
-                        apps.Add(MsiMetadata.Enrich(ExecutableMetadata.EnrichRegistration(app)));
+                        apps.Add(ExecutableMetadata.EnrichRegistration(MsiMetadata.Enrich(app)));
                     }
                     catch(Exception ex) when(ex is System.Security.SecurityException or UnauthorizedAccessException or IOException){failures++;}
                 }

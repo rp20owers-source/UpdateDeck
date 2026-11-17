@@ -30,7 +30,7 @@ public static partial class ExecutableMetadata
         {
             var executable=LocalIconExecutable(app.IconPath);if(executable==null)return app;
             string leaf=Path.GetFileNameWithoutExtension(executable);
-            if(leaf.Contains("unins",StringComparison.OrdinalIgnoreCase)||leaf.Contains("setup",StringComparison.OrdinalIgnoreCase)||leaf.Equals("cleanup",StringComparison.OrdinalIgnoreCase))return app;
+            if(leaf.Contains("unins",StringComparison.OrdinalIgnoreCase)||leaf.Contains("setup",StringComparison.OrdinalIgnoreCase)||leaf.Equals("cleanup",StringComparison.OrdinalIgnoreCase)||leaf.StartsWith("vcredist",StringComparison.OrdinalIgnoreCase)||leaf.StartsWith("vc_redist",StringComparison.OrdinalIgnoreCase))return app;
             var windows=Environment.GetFolderPath(Environment.SpecialFolder.Windows).TrimEnd('\\')+"\\";
             if(executable.StartsWith(windows,StringComparison.OrdinalIgnoreCase))return app; // MSI cache icons and system launchers are not app executables.
             var info=FileVersionInfo.GetVersionInfo(executable);
@@ -41,7 +41,7 @@ public static partial class ExecutableMetadata
             string directory=Path.GetDirectoryName(executable)!;
             if(app.InstallLocation.Length>0&&!IdentityResolver.Normalize(app.InstallLocation).Equals(IdentityResolver.Normalize(directory),StringComparison.OrdinalIgnoreCase)&&!executable.StartsWith(app.InstallLocation.TrimEnd('\\')+"\\",StringComparison.OrdinalIgnoreCase))return app;
             var architecture=Architecture(executable);
-            return app with{InstallLocation=app.InstallLocation.Length>0?app.InstallLocation:directory,Architecture=architecture??app.Architecture,PrimaryExecutable=executable,Evidence=app.Evidence.Append("Registered executable resources match product, publisher and installed version").ToArray()};
+            return app with{InstallLocation=app.InstallLocation.Length>0?app.InstallLocation:directory,Architecture=app.Architecture=="Unknown"?architecture??app.Architecture:app.Architecture,PrimaryExecutable=executable,Evidence=app.Evidence.Append("Registered executable resources match product, publisher and installed version").ToArray()};
         }
         catch(Exception ex)when(ex is IOException or UnauthorizedAccessException or ArgumentException or System.ComponentModel.Win32Exception){return app;}
     }

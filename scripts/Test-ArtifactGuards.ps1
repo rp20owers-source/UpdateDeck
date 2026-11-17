@@ -7,9 +7,9 @@ $release=[IO.Path]::GetFullPath($ReleaseDirectory);$source=[IO.Path]::GetFullPat
 $fixture=Join-Path ([IO.Path]::GetFullPath($WorkDirectory)) ('artifact-guards-'+[Guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $fixture | Out-Null
 $results=[Collections.Generic.List[object]]::new()
-$names=@('UpdateDeck-2.0.1-win-x64-Setup.exe','UpdateDeck-2.0.1-win-arm64-Setup.exe','UpdateDeck-2.0.1-win-x64-Portable.zip','UpdateDeck-2.0.1-win-arm64-Portable.zip','SHA256SUMS.txt','release.json')
+$names=@('UpdateDeck-2.0.2-win-x64-Setup.exe','UpdateDeck-2.0.2-win-arm64-Setup.exe','UpdateDeck-2.0.2-win-x64-Portable.zip','UpdateDeck-2.0.2-win-arm64-Portable.zip','SHA256SUMS.txt','release.json')
 foreach($name in $names){Copy-Item -LiteralPath (Join-Path $release $name) -Destination (Join-Path $fixture $name)}
-$zipName='UpdateDeck-2.0.1-win-x64-Portable.zip';$zipPath=Join-Path $fixture $zipName
+$zipName='UpdateDeck-2.0.2-win-x64-Portable.zip';$zipPath=Join-Path $fixture $zipName
 $sourceCopy=Join-Path $fixture 'source.zip';Copy-Item -LiteralPath $source -Destination $sourceCopy
 function Check-Rejected([string]$name,[scriptblock]$verify){
     $rejected=$false;$reason=''
