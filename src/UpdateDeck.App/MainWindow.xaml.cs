@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Media.Imaging;
 using System.Windows.Forms;
 
 namespace UpdateDeck.App;
@@ -14,7 +15,10 @@ public partial class MainWindow : Window
     private bool restoreMaximized;
     public MainWindow(MainViewModel viewModel,bool compactTest=false)
     {
-        InitializeComponent();model=viewModel;DataContext=model;
+        InitializeComponent();
+        var iconResource=System.Windows.Application.GetResourceStream(new Uri("pack://application:,,,/Assets/UpdateDeck.ico"))??throw new InvalidOperationException("The UpdateDeck window icon resource could not be loaded.");
+        using(iconResource.Stream)Icon=BitmapFrame.Create(iconResource.Stream,BitmapCreateOptions.PreservePixelFormat,BitmapCacheOption.OnLoad);
+        model=viewModel;DataContext=model;
         CommandBindings.Add(new(System.Windows.Input.ApplicationCommands.Find,(_,e)=>
         {
             if(model.Page=="History"){HistorySearchBox.Focus();HistorySearchBox.SelectAll();}

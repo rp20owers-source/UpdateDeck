@@ -31,5 +31,6 @@
   <ItemGroup>
     <Resource Include="Assets/UpdateDeck.ico" />
     <Resource Include="Assets/UpdateDeck-logo.png" />
+    <Resource Include="Assets/UpdateDeck-Mark.png" />
   </ItemGroup>
 </Project>

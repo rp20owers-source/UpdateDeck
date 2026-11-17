@@ -51,7 +51,7 @@
         <StackPanel DockPanel.Dock="Top" Margin="22,28,12,30">
           <StackPanel Orientation="Horizontal">
             <Border Background="{DynamicResource PrimaryBrush}" CornerRadius="8" Height="32" Width="32">
-              <TextBlock FontSize="26" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" Margin="0,-3,0,0" Text="↥" VerticalAlignment="Center" />
+              <Image Margin="3" Source="pack://application:,,,/Assets/UpdateDeck-Mark.png" Stretch="Uniform" />
             </Border>
             <TextBlock FontSize="20" FontWeight="SemiBold" Margin="10,2,0,0" Text="UpdateDeck" x:Name="BrandText" />
           </StackPanel>
@@ -60,7 +60,7 @@
         <StackPanel DockPanel.Dock="Bottom" Margin="20,16,14,24" x:Name="SideFooter">
           <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,18,0,0">
             <StackPanel>
-              <TextBlock FontSize="10" Foreground="{DynamicResource MutedBrush}" Text="UpdateDeck 2.0.0" />
+              <TextBlock FontSize="10" Foreground="{DynamicResource MutedBrush}" Text="UpdateDeck 2.0.1" />
             </StackPanel>
           </Border>
         </StackPanel>
@@ -527,7 +527,7 @@
               <StackPanel>
                 <TextBlock FontSize="20" FontWeight="SemiBold" Text="Storage &amp; release status" />
                 <TextBlock Margin="0,10,0,12" Style="{StaticResource Muted}" Text="{Binding Storage}" />
-                <TextBlock Style="{StaticResource Muted}" Text="UpdateDeck 2.0.0 · Unsigned development release. No official first-party update feed or trusted signing credentials are configured. Self-update is not operational." />
+                <TextBlock Style="{StaticResource Muted}" Text="UpdateDeck 2.0.1 · Unsigned development release. No official first-party update feed or trusted signing credentials are configured. Self-update is not operational." />
               </StackPanel>
             </Border>
             <Button Command="{Binding SaveCommand}" Content="Save preferences" HorizontalAlignment="Left" Margin="0,0,0,20" Padding="24,12" Style="{StaticResource PrimaryButton}" />

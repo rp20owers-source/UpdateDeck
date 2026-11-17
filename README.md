@@ -1,4 +1,4 @@
-# UpdateDeck 2.0.0
+# UpdateDeck 2.0.1
 
 This PC appears directly above Settings. It reports motherboard brand/model/revision, CPU model/socket/cores/threads/clocks/cache, each RAM module and slot/type/capacity/reported speed/voltage, GPU/driver/dedicated-memory metadata, disk model/capacity/bus/media/firmware, network adapters, displays, BIOS and Windows details. Data is read locally from bounded Windows CIM queries and display-driver registry metadata. No hardware code is loaded and no serial numbers, passwords or license keys are queried. Missing fields remain Not reported; clocks are Windows snapshots, not live benchmarks. Standard Windows inventory does not expose every GPU clock, temperature, power-supply or chipset specification. New profiles default to Dark; saved appearance choices remain supported.
 
@@ -14,7 +14,7 @@ A native Windows software maintenance application with real discovery, structure
 
 Choose the release matching your PC's architecture.
 
-- **Portable:** extract the complete `UpdateDeck-2.0.0-win-x64-Portable.zip` or `win-arm64` ZIP, then run `UpdateDeck.exe`. Keep all bundled files together. A .NET SDK or separately installed .NET runtime is not required.
+- **Portable:** extract the complete `UpdateDeck-2.0.1-win-x64-Portable.zip` or `win-arm64` ZIP, then run `UpdateDeck.exe`. Keep all bundled files together. A .NET SDK or separately installed .NET runtime is not required.
 - **Installer:** run the matching `Setup.exe`. Defaults to a per-user install; all-users installation uses normal Windows elevation. Shortcuts and an uninstall entry are provided. Settings survive upgrades and uninstall.
 
 Minimum technical OS: Windows 10 build **19041** (version 2004) or newer. Windows 11 is the primary target. Windows 10 compatibility does not imply Microsoft security support: use an edition / ESU / LTSC configuration still serviced by Microsoft. LTSC 2021 meets the technical floor; LTSC 2019 and older do not meet this product's floor. ARM64 is built but has not been run on ARM64 hardware. x86 is not distributed. macOS and Linux are not supported.

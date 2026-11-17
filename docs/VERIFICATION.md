@@ -1,6 +1,6 @@
 This maintenance build fixes over-broad restart blocking: queued file operations are advisory, while Windows Update/servicing restart requirements and unreadable restart state still block installations. Installer-reported restart results still stop subsequent work, and history reconciliation retains all pending-restart signals. Unknown inventory and publisher workflows no longer inflate deferred-update counts. The latest hotfix report records current validation; earlier long-idle/installer observations describe the preceding preview.
 
-# Verification — UpdateDeck 2.0.0 Preview
+# Verification — UpdateDeck 2.0.1 Preview
 
 This is a working native Windows engineering preview. It implements real discovery and update execution paths, with explicit gaps before production distribution. Testing never mass-updated or silently changed unrelated software on the development PC.
 

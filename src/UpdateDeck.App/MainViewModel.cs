@@ -438,7 +438,7 @@ public sealed class MainViewModel : Observable
     private Task ExportDiagnostics()
     {
         var dialog=new SaveFileDialog{Filter="Diagnostic report (*.json)|*.json",FileName="UpdateDeck-diagnostics.json"};
-        if(dialog.ShowDialog()==true)File.WriteAllText(dialog.FileName,JsonSerializer.Serialize(new{version="2.0.0",at=DateTimeOffset.UtcNow,os=system?.OS,architecture=system?.Architecture,inventoryCount=Rows.Count,providers=Providers.Select(x=>new{x.Name,x.Available,x.Capabilities}),history=History.Select(x=>new{x.Name,x.Provider,x.PreviousVersion,x.TargetVersion,x.State,x.StartedAt,x.FinishedAt,x.ExitCode,x.RebootRequired,x.RequiresInspection,x.RecordedProcessEnded})},StateStore.Json));
+        if(dialog.ShowDialog()==true)File.WriteAllText(dialog.FileName,JsonSerializer.Serialize(new{version="2.0.1",at=DateTimeOffset.UtcNow,os=system?.OS,architecture=system?.Architecture,inventoryCount=Rows.Count,providers=Providers.Select(x=>new{x.Name,x.Available,x.Capabilities}),history=History.Select(x=>new{x.Name,x.Provider,x.PreviousVersion,x.TargetVersion,x.State,x.StartedAt,x.FinishedAt,x.ExitCode,x.RebootRequired,x.RequiresInspection,x.RecordedProcessEnded})},StateStore.Json));
         return Task.CompletedTask;
     }
     public void ReportError(Exception ex)

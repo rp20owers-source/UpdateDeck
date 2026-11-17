@@ -43,6 +43,8 @@ try {
             if(-not (Test-Path -LiteralPath (Join-Path $publish $name))){throw "Missing runtime dependency: $name ($rid)"}
         }
         Copy-Item -LiteralPath 'LICENSE','README.md','THIRD-PARTY-NOTICES.md','WinGet-NOTICE.txt','WinGet-COM-NOTICE.txt' -Destination $publish
+        New-Item -ItemType Directory -Force -Path (Join-Path $publish 'Assets') | Out-Null
+        Copy-Item -LiteralPath 'src\UpdateDeck.App\Assets\UpdateDeck.ico' -Destination (Join-Path $publish 'Assets\UpdateDeck.ico')
         New-Item -ItemType Directory -Force -Path (Join-Path $publish 'docs') | Out-Null
         Copy-Item -Path 'docs\*.md' -Destination (Join-Path $publish 'docs')
         New-Item -ItemType Directory -Force -Path (Join-Path $publish 'licenses') | Out-Null
@@ -54,9 +56,9 @@ try {
         }
         if(@($forbidden).Count -gt 0){throw 'Release staging contains local state or development-only files. Nothing was promoted.'}
         Invoke-Checked $IsccPath @("--define=AppArch=$arch","--define=PublishDir=$publish","--define=ArtifactDir=$packageRoot",'installer/UpdateDeck.iss')
-        Sign-Artifact (Join-Path $packageRoot "UpdateDeck-2.0.0-$rid-Setup.exe")
+        Sign-Artifact (Join-Path $packageRoot "UpdateDeck-2.0.1-$rid-Setup.exe")
         Set-Content -LiteralPath (Join-Path $publish 'portable.mode') -Value 'UpdateDeck portable storage enabled' -Encoding utf8
-        $zip=Join-Path $packageRoot "UpdateDeck-2.0.0-$rid-Portable.zip"
+        $zip=Join-Path $packageRoot "UpdateDeck-2.0.1-$rid-Portable.zip"
         Compress-Archive -Path (Join-Path $publish '*') -DestinationPath $zip -Force -CompressionLevel Optimal
     }
     $files=Get-ChildItem -LiteralPath $packageRoot -File | Where-Object {$_.Extension -in '.zip','.exe'} | Sort-Object Name
@@ -65,7 +67,7 @@ try {
     $source=& (Join-Path $PSScriptRoot 'Get-SourceManifest.ps1') -ProjectRoot $projectRoot
     if($source.treeSha256 -ne $sourceBefore.treeSha256){throw 'Source inputs changed during this release build. Nothing was promoted; build again from stable inputs.'}
     $source | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $buildRoot 'source-inputs.json') -Encoding utf8
-    $metadata=[ordered]@{schema=1;product='UpdateDeck';version='2.0.0';channel='development-preview';buildId=$buildId;builtUtc=[DateTime]::UtcNow.ToString('o');sourceTreeSha256=$source.treeSha256;minimumWindowsBuild=19041;architectures=@('x64','arm64');runtime='10.0.15';selfContained=$true;signed=[bool]$SigningThumbprint;signingThumbprint=$SigningThumbprint;arm64RuntimeTested=$false;files=@($files.Name)}
+    $metadata=[ordered]@{schema=1;product='UpdateDeck';version='2.0.1';channel='development-preview';buildId=$buildId;builtUtc=[DateTime]::UtcNow.ToString('o');sourceTreeSha256=$source.treeSha256;minimumWindowsBuild=19041;architectures=@('x64','arm64');runtime='10.0.15';selfContained=$true;signed=[bool]$SigningThumbprint;signingThumbprint=$SigningThumbprint;arm64RuntimeTested=$false;files=@($files.Name)}
     $metadata | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $packageRoot 'release.json') -Encoding utf8
     $validation=Join-Path $buildRoot 'release-validation.json'
     & (Join-Path $PSScriptRoot 'Verify-Release.ps1') -ReleaseDirectory $packageRoot -ReportPath $validation

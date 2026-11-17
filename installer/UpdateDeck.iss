@@ -7,7 +7,7 @@
 #ifndef ArtifactDir
   #error ArtifactDir must be provided
 #endif
-#define AppVersion "2.0.0"
+#define AppVersion "2.0.1"
 [Setup]
 AppId={{0EF48617-880D-479C-B39E-24B886120B80}
 AppName=UpdateDeck
@@ -53,8 +53,8 @@ Name: desktopicon; Description: "Create a &desktop shortcut"; GroupDescription: 
 [Files]
 Source: "{#PublishDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "portable.mode,Data\*,*.pdb"
 [Icons]
-Name: "{autoprograms}\UpdateDeck"; Filename: "{app}\UpdateDeck.exe"
-Name: "{autodesktop}\UpdateDeck"; Filename: "{app}\UpdateDeck.exe"; Tasks: desktopicon
+Name: "{autoprograms}\UpdateDeck"; Filename: "{app}\UpdateDeck.exe"; IconFilename: "{app}\Assets\UpdateDeck.ico"
+Name: "{autodesktop}\UpdateDeck"; Filename: "{app}\UpdateDeck.exe"; IconFilename: "{app}\Assets\UpdateDeck.ico"; Tasks: desktopicon
 [Run]
 Filename: "{app}\UpdateDeck.exe"; Description: "Open UpdateDeck"; Flags: nowait postinstall skipifsilent runasoriginaluser
 [Code]
@@ -69,7 +69,7 @@ begin
       SuppressibleMsgBox('The installed UpdateDeck version could not be verified. Inspect its uninstall registration before replacing it.', mbError, MB_OK, IDOK);
       Result := False;
     end
-    else if ComparePackedVersion(Packed, PackVersionComponents(2, 0, 0, 0)) > 0 then
+    else if ComparePackedVersion(Packed, PackVersionComponents(2, 0, 1, 0)) > 0 then
     begin
       SuppressibleMsgBox('A newer UpdateDeck version is installed. This preview will not downgrade it.', mbError, MB_OK, IDOK);
       Result := False;

@@ -49,7 +49,7 @@ public partial class App : Application
         var coordinator=new InventoryCoordinator([new RegistryInventory(),new GameLibraryInventory(),new StoreInventory(),new AdditionalInventory(prefs),new AudioPluginInventory(prefs),provider],vendors,store,official:official);
         var result=await coordinator.ScanAsync(true,new Progress<string>(),CancellationToken.None);
         var machine=await new MachineServices(runner).InspectAsync(CancellationToken.None);
-        File.WriteAllText(output,JsonSerializer.Serialize(new{version="2.0.0",elapsedMilliseconds=timer.ElapsedMilliseconds,machine,providers=result.Providers,applications=result.Apps,vendors=vendors.Targets},StateStore.Json));
+        File.WriteAllText(output,JsonSerializer.Serialize(new{version="2.0.1",elapsedMilliseconds=timer.ElapsedMilliseconds,machine,providers=result.Providers,applications=result.Apps,vendors=vendors.Targets},StateStore.Json));
     }
     protected override void OnExit(ExitEventArgs e){activationWait?.Unregister(null);activate?.Dispose();instance?.Dispose();installerGuard?.Dispose();base.OnExit(e);}
 }
