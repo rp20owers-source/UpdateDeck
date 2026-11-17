@@ -1,0 +1,626 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:local="clr-namespace:UpdateDeck.App" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Background="{DynamicResource BackgroundBrush}" FontFamily="Segoe UI" FontSize="13" Foreground="{DynamicResource TextBrush}" Height="870" Icon="pack://application:,,,/Assets/UpdateDeck.ico" MinHeight="620" MinWidth="900" Title="UpdateDeck" UseLayoutRounding="True" Width="1340" WindowStartupLocation="CenterScreen" x:Class="UpdateDeck.App.MainWindow">
+  <Window.Resources>
+    <GroupStyle x:Key="SoftwareGroups">
+                    <GroupStyle.ContainerStyle>
+                      <Style TargetType="GroupItem">
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Template">
+                          <Setter.Value>
+                            <ControlTemplate TargetType="GroupItem">
+                              <Expander IsExpanded="False" HorizontalContentAlignment="Stretch" Margin="0,4" Foreground="{DynamicResource TextBrush}" Background="{DynamicResource SurfaceBrush}" AutomationProperties.Name="{Binding Name,StringFormat=Expand {0} group}">
+                                <Expander.Header>
+                                  <StackPanel Orientation="Horizontal" Margin="8,12">
+                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
+                                    <Border Background="{DynamicResource HoverBrush}" CornerRadius="9" Padding="8,1" Margin="10,0,0,0"><TextBlock Text="{Binding ItemCount}" Foreground="{DynamicResource MutedBrush}"/></Border>
+                                  </StackPanel>
+                                </Expander.Header>
+                                <ItemsPresenter HorizontalAlignment="Stretch"/>
+                              </Expander>
+                            </ControlTemplate>
+                          </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                          <DataTrigger Binding="{Binding ItemCount}" Value="1">
+                            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="GroupItem"><ItemsPresenter HorizontalAlignment="Stretch"/></ControlTemplate></Setter.Value></Setter>
+                          </DataTrigger>
+                        </Style.Triggers>
+                      </Style>
+                    </GroupStyle.ContainerStyle>
+                  </GroupStyle>
+    <local:PageVisibility x:Key="Page" />
+    <local:BoolVisibility x:Key="Visible" />
+    <local:IconConverter x:Key="Icon" />
+    <local:NavGlyph x:Key="NavGlyph" />
+    <local:DashboardMetricsVisibility x:Key="Metrics" />
+    <local:InventoryVisibility x:Key="InventoryVisible" />
+    <local:QueueDetailsVisibility x:Key="QueueDetailsVisible" />
+    <local:HeightVisibility x:Key="HeightVisible" />
+  </Window.Resources>
+  <Window.InputBindings>
+    <KeyBinding Command="{Binding ScanCommand}" Key="F5" />
+    <KeyBinding Command="{Binding CloseDetailsCommand}" Key="Escape" />
+  </Window.InputBindings>
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="212" x:Name="SideColumn" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
+    <Border Background="{DynamicResource SidebarBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0">
+      <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Margin="22,28,12,30">
+          <StackPanel Orientation="Horizontal">
+            <Border Background="{DynamicResource PrimaryBrush}" CornerRadius="8" Height="32" Width="32">
+              <TextBlock FontSize="26" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" Margin="0,-3,0,0" Text="↥" VerticalAlignment="Center" />
+            </Border>
+            <TextBlock FontSize="20" FontWeight="SemiBold" Margin="10,2,0,0" Text="UpdateDeck" x:Name="BrandText" />
+          </StackPanel>
+          <TextBlock FontSize="9" Foreground="{DynamicResource MutedBrush}" Margin="0,12,0,0" Text="SOFTWARE MAINTENANCE" x:Name="BrandSub" />
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Bottom" Margin="20,16,14,24" x:Name="SideFooter">
+          <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,18,0,0">
+            <StackPanel>
+              <TextBlock FontSize="10" Foreground="{DynamicResource MutedBrush}" Text="UpdateDeck 2.0.0" />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+        <ListBox AutomationProperties.Name="Main navigation" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource NavItem}" ItemsSource="{Binding Navigation}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectedItem="{Binding Page}" x:Name="NavList">
+          <ListBox.ItemTemplate>
+            <DataTemplate>
+              <StackPanel Orientation="Horizontal">
+                <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="17" Text="{Binding Converter={StaticResource NavGlyph}}" VerticalAlignment="Center" Width="28" />
+                <TextBlock Text="{Binding}" VerticalAlignment="Center" x:Name="NavText" />
+              </StackPanel>
+              <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding Tag,RelativeSource={RelativeSource AncestorType=Window}}" Value="Compact">
+                  <Setter Property="Visibility" TargetName="NavText" Value="Collapsed" />
+                </DataTrigger>
+              </DataTemplate.Triggers>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </DockPanel>
+    </Border>
+    <Grid Grid.Column="1" Margin="28,24,28,16">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+      <Grid Margin="0,0,0,20">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <StackPanel>
+          <TextBlock FontSize="28" FontWeight="SemiBold" Text="{Binding Page}" />
+          <TextBlock Margin="0,6,16,0" Style="{StaticResource Muted}" Text="{Binding PageSubtitle}" />
+        </StackPanel>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top">
+          <Button AutomationProperties.Name="Vendor updater options" Command="{Binding ToggleVendorsCommand}" Content="{Binding VendorButtonLabel}" Margin="0,0,10,0" Visibility="{Binding Page,Converter={StaticResource Page},ConverterParameter=Updates}"/>
+          <Button AutomationProperties.HelpText="Read inventory and check trusted update sources. F5." Command="{Binding ScanCommand}" Content="↻  Scan now"/>
+        </StackPanel>
+      </Grid>
+      <Border Grid.Row="1" Margin="0,0,0,16" Padding="14,10" Style="{StaticResource Card}" Visibility="{Binding HasBanner,Converter={StaticResource Visible}}">
+        <DockPanel>
+          <Button Command="{Binding DismissCommand}" Content="Dismiss" DockPanel.Dock="Right" Margin="14,0,0,0" />
+          <local:LiveStatusTextBlock Text="{Binding Banner}" TextWrapping="Wrap" VerticalAlignment="Center" />
+        </DockPanel>
+      </Border>
+      <Grid Grid.Row="2">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="1">
+          <Grid.Visibility>
+            <MultiBinding Converter="{StaticResource InventoryVisible}">
+              <Binding Path="Page" />
+              <Binding Path="QueueDetailsExpanded" />
+              <Binding Path="ShowVendors" />
+            </MultiBinding>
+          </Grid.Visibility>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+          </Grid.RowDefinitions>
+          <Grid Margin="0,0,0,18">
+            <Grid.Visibility>
+              <MultiBinding Converter="{StaticResource Metrics}">
+                <Binding Path="Page" />
+                <Binding Path="ActualHeight" RelativeSource="{RelativeSource AncestorType=Window}" />
+              </MultiBinding>
+            </Grid.Visibility>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Border Margin="0,0,10,0" Style="{StaticResource Card}">
+              <StackPanel>
+                <TextBlock FontSize="10" Foreground="{DynamicResource MutedBrush}" Text="AVAILABLE UPDATES" />
+                <TextBlock FontSize="34" FontWeight="SemiBold" Foreground="{DynamicResource AccentBrush}" Margin="0,7,0,3" Text="{Binding UpdateCount}" />
+                <TextBlock FontSize="11" Style="{StaticResource Muted}" Text="Verified newer releases" />
+              </StackPanel>
+            </Border>
+            <Border Grid.Column="1" Margin="0,0,10,0" Style="{StaticResource Card}">
+              <StackPanel>
+                <TextBlock FontSize="10" Foreground="{DynamicResource MutedBrush}" Text="INSTALLED APPS" />
+                <TextBlock FontSize="34" FontWeight="SemiBold" Margin="0,7,0,3" Text="{Binding InstalledCount}" />
+                <TextBlock FontSize="11" Style="{StaticResource Muted}" Text="Across discovery sources" />
+              </StackPanel>
+            </Border>
+            <Border Grid.Column="2" Margin="0,0,10,0" Style="{StaticResource Card}">
+              <StackPanel>
+                <TextBlock FontSize="10" Foreground="{DynamicResource MutedBrush}" Text="VERIFIED CURRENT" />
+                <TextBlock FontSize="34" FontWeight="SemiBold" Foreground="{DynamicResource SuccessBrush}" Margin="0,7,0,3" Text="{Binding CurrentCount}" />
+                <TextBlock FontSize="11" Style="{StaticResource Muted}" Text="Fresh catalog checks" />
+              </StackPanel>
+            </Border>
+            <Border Grid.Column="3" Style="{StaticResource Card}">
+              <StackPanel>
+                <TextBlock FontSize="10" Foreground="{DynamicResource MutedBrush}" Text="UNVERIFIED" />
+                <TextBlock FontSize="34" FontWeight="SemiBold" Margin="0,7,0,3" Text="{Binding UnknownCount}" />
+                <TextBlock FontSize="11" Style="{StaticResource Muted}" Text="Status needs a closer look" />
+              </StackPanel>
+            </Border>
+          </Grid>
+          <Border Grid.Row="1" Margin="0,0,0,20" Padding="18" Style="{StaticResource Card}" Visibility="{Binding Page,Converter={StaticResource Page},ConverterParameter=Dashboard}">
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <StackPanel Margin="0,0,24,0">
+                <TextBlock FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource AccentBrush}" Text="MAINTENANCE OVERVIEW" />
+                <TextBlock FontSize="23" FontWeight="SemiBold" Margin="0,8,0,6" Text="{Binding HeroTitle}" TextWrapping="Wrap" />
+                <TextBlock HorizontalAlignment="Left" MaxWidth="660" Style="{StaticResource Muted}" Text="{Binding HeroDescription}" />
+                <Button Background="Transparent" BorderThickness="0" Command="{Binding OpenVendorsCommand}" Content="Open vendor updaters  →" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Left" Margin="0,2,0,0" Padding="0,10,0,0" Visibility="{Binding ActualHeight,RelativeSource={RelativeSource AncestorType=Window},Converter={StaticResource HeightVisible},ConverterParameter=680}" />
+              </StackPanel>
+              <Button AutomationProperties.HelpText="Refresh metadata, build a policy-aware plan, and install eligible routine updates sequentially." Command="{Binding UpdateAllCommand}" Content="↑  Update All" Grid.Column="1" Padding="24,13" Style="{StaticResource PrimaryButton}" VerticalAlignment="Center" />
+            </Grid>
+          </Border>
+          <Grid Grid.Row="2" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox AutomationProperties.Name="Search applications" Margin="0,0,12,0" MinWidth="120" Tag="Search applications, publisher, or package ID…" Text="{Binding Search,UpdateSourceTrigger=PropertyChanged,Delay=180}" ToolTip="Search by application, publisher, package ID or provider" x:Name="SearchBox" />
+            <ComboBox AutomationProperties.Name="Filter applications" Grid.Column="1" ItemsSource="{Binding Filters}" Margin="0,0,8,0" SelectedItem="{Binding Filter}" Width="174" />
+            <ComboBox AutomationProperties.Name="Sort applications" Grid.Column="2" ItemsSource="{Binding Sorts}" SelectedItem="{Binding Sort}" Width="130" />
+          </Grid>
+          <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" ClipToBounds="True" CornerRadius="8" Grid.Row="3">
+            <Grid>
+              <ListView x:Name="ApplicationsGrid" AutomationProperties.Name="Discovered applications" ItemsSource="{Binding AppsView}" SelectedItem="{Binding SelectedApp}" Background="Transparent" Foreground="{DynamicResource TextBrush}" BorderThickness="0" ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                <ListView.ItemContainerStyle><Style TargetType="ListViewItem"><Setter Property="HorizontalContentAlignment" Value="Stretch"/><Setter Property="MinHeight" Value="68"/><Setter Property="Background" Value="Transparent"/><Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ListViewItem"><Border Background="{TemplateBinding Background}" Padding="0,8" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1"><GridViewRowPresenter Content="{TemplateBinding Content}" Columns="{Binding View.Columns,RelativeSource={RelativeSource AncestorType=ListView}}"/></Border><ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="{DynamicResource HoverBrush}"/></Trigger><Trigger Property="IsSelected" Value="True"><Setter Property="Background" Value="{DynamicResource HoverBrush}"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter><Setter Property="Padding" Value="0"/><Setter Property="Foreground" Value="{DynamicResource TextBrush}"/></Style></ListView.ItemContainerStyle>
+                <ListView.GroupStyle><StaticResource ResourceKey="SoftwareGroups"/></ListView.GroupStyle>
+                <ListView.View><GridView AllowsColumnReorder="False"><GridViewColumn Width="36"><GridViewColumn.Header><GridViewColumnHeader Content="" Tag=""/></GridViewColumn.Header><GridViewColumn.CellTemplate><DataTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+                        <CheckBox AutomationProperties.Name="{Binding Name,StringFormat=Select {0}}" HorizontalAlignment="Center" IsChecked="{Binding Selected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" MinWidth="16" Width="16" />
+                      </DataTemplate>
+                    </GridViewColumn.CellTemplate></GridViewColumn><GridViewColumn Width="300"><GridViewColumn.Header><GridViewColumnHeader Content="APPLICATION" Tag="Name"/></GridViewColumn.Header><GridViewColumn.CellTemplate><DataTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+                        <Grid>
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="38" />
+                            <ColumnDefinition Width="*" />
+                          </Grid.ColumnDefinitions>
+                          <Border Background="{DynamicResource HoverBrush}" CornerRadius="7" Height="30" VerticalAlignment="Center" Width="30">
+                            <Grid>
+                              <TextBlock Foreground="{DynamicResource MutedBrush}" HorizontalAlignment="Center" Text="{Binding Monogram}" VerticalAlignment="Center" />
+                              <Image Height="25" Source="{Binding App.IconPath,Converter={StaticResource Icon}}" Width="25" />
+                            </Grid>
+                          </Border>
+                          <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock FontWeight="SemiBold" Text="{Binding Name}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}" />
+                            <TextBlock FontSize="11" Foreground="{DynamicResource MutedBrush}" Margin="0,4,0,0" Text="{Binding Publisher}" TextTrimming="CharacterEllipsis" />
+                          </StackPanel>
+                        </Grid>
+                      </DataTemplate>
+                    </GridViewColumn.CellTemplate></GridViewColumn><GridViewColumn Width="110" DisplayMemberBinding="{Binding Version}"><GridViewColumn.Header><GridViewColumnHeader Content="INSTALLED" Tag="Version"/></GridViewColumn.Header></GridViewColumn><GridViewColumn Width="110" DisplayMemberBinding="{Binding Available}"><GridViewColumn.Header><GridViewColumnHeader Content="AVAILABLE" Tag="Available"/></GridViewColumn.Header></GridViewColumn><GridViewColumn Width="100" DisplayMemberBinding="{Binding Provider}"><GridViewColumn.Header><GridViewColumnHeader Content="SOURCE" Tag="Provider"/></GridViewColumn.Header></GridViewColumn><GridViewColumn Width="145"><GridViewColumn.Header><GridViewColumnHeader Content="STATUS" Tag="Status"/></GridViewColumn.Header><GridViewColumn.CellTemplate><DataTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+                        <TextBlock FontSize="12" Foreground="{DynamicResource MutedBrush}" Text="{Binding Status}" TextWrapping="Wrap" />
+                      </DataTemplate>
+                    </GridViewColumn.CellTemplate></GridViewColumn><GridViewColumn Width="130"><GridViewColumn.Header><GridViewColumnHeader Content="" Tag=""/></GridViewColumn.Header><GridViewColumn.CellTemplate><DataTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+                        <Button AutomationProperties.Name="{Binding Name,StringFormat=Action for {0}}" Command="{Binding DataContext.RowActionCommand,RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" Content="{Binding Action}" FontSize="11" MinWidth="100" Padding="10,6" />
+                      </DataTemplate>
+                    </GridViewColumn.CellTemplate></GridViewColumn></GridView></ListView.View>
+              </ListView>
+              <Border Background="{DynamicResource BackgroundBrush}" Margin="0,42,0,0" Visibility="{Binding IsEmpty,Converter={StaticResource Visible}}">
+                <StackPanel HorizontalAlignment="Center" Margin="24" MaxWidth="450" VerticalAlignment="Center">
+                  <TextBlock FontSize="22" FontWeight="SemiBold" HorizontalAlignment="Center" Text="Nothing in this view yet" />
+                  <TextBlock Margin="0,12" Style="{StaticResource Muted}" Text="Scan this PC, adjust the search, or choose All applications. Unverifiable software remains visible in the installed inventory." TextAlignment="Center" />
+                  <Button Command="{Binding ScanCommand}" Content="Scan now" HorizontalAlignment="Center" />
+                </StackPanel>
+              </Border>
+            </Grid>
+          </Border>
+          <Grid Grid.Row="4" Margin="0,12,0,0">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Foreground="{DynamicResource MutedBrush}" Text="{Binding ResultCount}" VerticalAlignment="Center" />
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+              <Button Command="{Binding PreviewPlanCommand}" Content="Preview plan" Margin="0,0,10,0" />
+              <Button Command="{Binding UpdateSelectedCommand}" Content="Update selected" Margin="0,0,8,0" />
+              <Button Command="{Binding UpdateAllCommand}" Content="Update All" Style="{StaticResource PrimaryButton}" Visibility="{Binding Page,Converter={StaticResource Page},ConverterParameter=Updates|Installed Apps}" />
+            </StackPanel>
+          </Grid>
+        </Grid>
+        <Grid Grid.Row="1" Visibility="{Binding Page,Converter={StaticResource Page},ConverterParameter=Games}">
+          <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+          <Border Style="{StaticResource Card}" Margin="0,0,0,12"><StackPanel>
+            <TextBlock FontSize="22" FontWeight="SemiBold" Text="Your gaming library"/>
+            <TextBlock Style="{StaticResource Muted}" Margin="0,8,0,0" Text="Installed Steam and GOG registrations and Epic manifests appear below. Other libraries stay in their official launchers. Sign in there to access owned games; UpdateDeck never requests your gaming credentials."/>
+            <TextBlock Margin="0,10,0,0" Text="{Binding GamesSummary}"/>
+          </StackPanel></Border>
+          <Expander Grid.Row="1" Header="Game platforms — open a launcher or official guidance" IsExpanded="True" Margin="0,0,0,12">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="240"><ItemsControl ItemsSource="{Binding GameLaunchers}"><ItemsControl.ItemTemplate><DataTemplate>
+              <Border Style="{StaticResource Card}" Margin="0,4,0,4" Padding="12"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <StackPanel Margin="0,0,16,0"><TextBlock FontSize="16" FontWeight="SemiBold" Text="{Binding Name}"/><TextBlock Style="{StaticResource Muted}" Text="{Binding Explanation}"/></StackPanel>
+                <Button Grid.Column="1" VerticalAlignment="Center" Command="{Binding DataContext.OpenVendorCommand,RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" Content="{Binding ActionLabel}"/>
+              </Grid></Border>
+            </DataTemplate></ItemsControl.ItemTemplate></ItemsControl></ScrollViewer>
+          </Expander>
+          <TextBox x:Name="GamesSearchBox" Grid.Row="2" Margin="0,0,0,12" Text="{Binding GameSearch,UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Search games" ToolTip="Search installed games or platforms (Ctrl+F)"/>
+          <DataGrid Grid.Row="3" ItemsSource="{Binding GamesView}" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" EnableRowVirtualization="True" SelectionMode="Single" AutomationProperties.Name="Installed games">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="GAME" Binding="{Binding Name}" Width="*"/>
+              <DataGridTextColumn Header="PLATFORM" Binding="{Binding Provider}" Width="110"/>
+              <DataGridTextColumn Header="INSTALLED VERSION" Binding="{Binding Version}" Width="150"/>
+              <DataGridTemplateColumn Header="MANAGE" Width="150"><DataGridTemplateColumn.CellTemplate><DataTemplate><Button Content="Open platform ↗" Command="{Binding DataContext.RowActionCommand,RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+            </DataGrid.Columns>
+          </DataGrid>
+        </Grid>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Visibility="{Binding ShowVendors,Converter={StaticResource Visible}}">
+          <StackPanel>
+            <Border Margin="0,0,0,20" Style="{StaticResource Card}">
+              <StackPanel>
+                <TextBlock FontSize="22" FontWeight="SemiBold" Text="The right manager for each application" />
+                <TextBlock Margin="0,10,0,0" Style="{StaticResource Muted}" Text="Vendor licensing, drivers, plugins and large content libraries stay with their official tools. A handoff is recorded when a manager opens. Rescan afterward to inspect installed versions." />
+              </StackPanel>
+            </Border>
+            <ItemsControl ItemsSource="{Binding Vendors}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <Border Margin="0,0,0,12" Style="{StaticResource Card}">
+                    <Grid>
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                      </Grid.ColumnDefinitions>
+                      <StackPanel Margin="0,0,24,0">
+                        <TextBlock FontSize="17" FontWeight="SemiBold" Text="{Binding Name}" />
+                        <TextBlock Margin="0,8,0,0" Style="{StaticResource Muted}" Text="{Binding Explanation}" />
+                      </StackPanel>
+                      <Button Command="{Binding DataContext.OpenVendorCommand,RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" Content="{Binding ActionLabel}" Grid.Column="1" VerticalAlignment="Center" />
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <TextBlock Margin="20" Style="{StaticResource Muted}" Text="No reviewed vendor managers were identified. Scan installed applications to discover supported workflows." Visibility="{Binding HasVendors,Converter={StaticResource Visible},ConverterParameter=Invert}" />
+          </StackPanel>
+        </ScrollViewer>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Visibility="{Binding Page,Converter={StaticResource Page},ConverterParameter=Drivers}">
+          <StackPanel>
+            <Border Margin="0,0,0,20" Style="{StaticResource Card}">
+              <StackPanel>
+                <TextBlock FontSize="24" FontWeight="SemiBold" Text="Hardware-aware. Publisher-managed." />
+                <TextBlock Margin="0,12,0,18" Style="{StaticResource Muted}" Text="{Binding DriverGuidance}" />
+                <Button Command="{Binding OpenVendorsCommand}" Content="View official managers" HorizontalAlignment="Left" />
+              </StackPanel>
+            </Border>
+            <Border Margin="0,0,0,20" Style="{StaticResource Card}">
+              <StackPanel>
+                <TextBlock FontSize="18" FontWeight="SemiBold" Text="Graphics devices &amp; installed drivers" />
+                <TextBlock Margin="0,0,0,16" Style="{StaticResource Muted}" Text="{Binding DriverObservation}" />
+                <TextBlock Margin="0,16,0,0" Text="{Binding GraphicsSummary}" TextWrapping="Wrap" />
+                <TextBlock Margin="0,18,0,0" Style="{StaticResource Muted}" Text="Driver branch and latest-release availability are not inferred. Opening a manager does not prove an update was installed." />
+              </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+              <StackPanel>
+                <TextBlock FontSize="18" FontWeight="SemiBold" Text="This PC" />
+                <TextBlock Margin="0,12,0,0" Style="{StaticResource Muted}" Text="{Binding SystemSummary}" />
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </ScrollViewer>
+        <Grid Grid.Row="1" Visibility="{Binding Page,Converter={StaticResource Page},ConverterParameter=History}">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+          </Grid.RowDefinitions>
+          <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox AutomationProperties.Name="Search update history" Margin="0,0,12,0" Tag="Search operations, sources, or results…" Text="{Binding HistorySearch,UpdateSourceTrigger=PropertyChanged,Delay=180}" x:Name="HistorySearchBox" />
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+              <Button Command="{Binding ResolveInstallerCommand}" Content="Confirm installer ended" Margin="0,0,8,0" Visibility="{Binding SelectedOperation.RequiresInspection,Converter={StaticResource Visible}}" />
+              <Button Command="{Binding DiagnosticsCommand}" Content="Export diagnostics" />
+            </StackPanel>
+          </Grid>
+          <DataGrid AutomationProperties.Name="Update history" Grid.Row="1" ItemsSource="{Binding HistoryView}" RowHeight="58" SelectedItem="{Binding SelectedOperation}">
+            <DataGrid.Columns>
+              <DataGridTextColumn Binding="{Binding Name}" Header="APPLICATION" Width="2*" />
+              <DataGridTextColumn Binding="{Binding Provider}" Header="SOURCE" Width="*" />
+              <DataGridTextColumn Binding="{Binding TargetVersion}" Header="TARGET" Width="*" />
+              <DataGridTextColumn Binding="{Binding ResultLabel}" Header="RESULT" Width="1.4*" />
+              <DataGridTextColumn Binding="{Binding StartedAt,StringFormat=g}" Header="STARTED" Width="1.6*" />
+            </DataGrid.Columns>
+          </DataGrid>
+          <Border Background="{DynamicResource BackgroundBrush}" Grid.Row="1" Margin="0,45,0,0" Visibility="{Binding HasHistory,Converter={StaticResource Visible},ConverterParameter=Invert}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+              <TextBlock FontSize="23" Text="A clear record starts here" />
+              <TextBlock Margin="0,12" Style="{StaticResource Muted}" Text="Update operations and vendor handoffs appear here after you initiate them." />
+            </StackPanel>
+          </Border>
+          <Border Grid.Row="2" Margin="0,16,0,0" MaxHeight="220" Style="{StaticResource Card}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+              <TextBlock Text="{Binding OperationDetails}" TextWrapping="Wrap" />
+            </ScrollViewer>
+          </Border>
+        </Grid>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Visibility="{Binding Page,Converter={StaticResource Page},ConverterParameter=This PC}">
+          <StackPanel>
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16"><StackPanel>
+              <TextBlock FontSize="24" FontWeight="SemiBold" Text="Inside your PC"/>
+              <TextBlock Style="{StaticResource Muted}" Margin="0,10,0,0" Text="{Binding SystemSummary}"/>
+              <TextBlock Style="{StaticResource Muted}" Margin="0,10,0,0" Text="Specifications reported by Windows and firmware. Scan now refreshes these details. Speeds are reported snapshots, not benchmarks. GPU clocks, temperatures, power-supply details and some component specifications are not exposed by standard Windows inventory."/>
+            </StackPanel></Border>
+            <ItemsControl ItemsSource="{Binding HardwareSections}"><ItemsControl.ItemTemplate><DataTemplate>
+              <Border Style="{StaticResource Card}" Margin="0,0,0,14"><StackPanel>
+                <TextBlock FontSize="20" FontWeight="SemiBold" Text="{Binding Name}"/>
+                <TextBlock FontSize="15" Foreground="{DynamicResource AccentBrush}" TextWrapping="Wrap" Margin="0,8,0,14" Text="{Binding Summary}"/>
+                <ItemsControl ItemsSource="{Binding Fields}"><ItemsControl.ItemTemplate><DataTemplate>
+                  <Grid Margin="0,5"><Grid.ColumnDefinitions><ColumnDefinition Width="220"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                    <TextBlock Style="{StaticResource Muted}" Margin="0,0,16,0" Text="{Binding Label}"/>
+                    <TextBlock Grid.Column="1" TextWrapping="Wrap" Text="{Binding Value}"/>
+                  </Grid>
+                </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+              </StackPanel></Border>
+            </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+          </StackPanel>
+        </ScrollViewer>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Visibility="{Binding Page,Converter={StaticResource Page},ConverterParameter=Settings}">
+          <StackPanel HorizontalAlignment="Left" MaxWidth="960">
+            <Border Margin="0,0,0,16" Style="{StaticResource Card}">
+              <StackPanel>
+                <TextBlock FontSize="20" FontWeight="SemiBold" Text="Your preferences" />
+                <TextBlock Margin="0,8,0,0" Style="{StaticResource Muted}" Text="Changes apply when you select Save preferences." />
+                <Grid Margin="0,18,0,0">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="200" />
+                  </Grid.ColumnDefinitions>
+                  <StackPanel>
+                    <TextBlock Text="Appearance" />
+                    <TextBlock Margin="0,5,20,0" Style="{StaticResource Muted}" Text="High contrast follows Windows automatically." />
+                  </StackPanel>
+                  <ComboBox AutomationProperties.Name="Appearance theme" Grid.Column="1" ItemsSource="{Binding Themes}" SelectedItem="{Binding Settings.Theme}" />
+                </Grid>
+                <CheckBox Content="Check for updates when UpdateDeck starts" IsChecked="{Binding Settings.ScanOnStartup}" />
+                <CheckBox Content="Keep UpdateDeck in the system tray when the window closes" IsChecked="{Binding Settings.Tray}" />
+                <CheckBox Content="Show queue completion notifications in the tray" IsChecked="{Binding Settings.Notifications}" />
+                <CheckBox Content="Pause installations until I review my saved update policy" IsChecked="{Binding Settings.PauseInstallations}" />
+                <CheckBox Content="After Update All, open up to two official managers (excludes drivers and game launchers)" IsChecked="{Binding Settings.AutomaticVendorHandoffs}" />
+                <TextBlock Margin="0,8,0,0" Style="{StaticResource Muted}" Text="Driver and firmware changes are always supervised. Application agreements and Windows elevation remain required." />
+              </StackPanel>
+            </Border>
+            <Border Margin="0,0,0,16" Style="{StaticResource Card}">
+              <StackPanel>
+                <TextBlock FontSize="20" FontWeight="SemiBold" Text="Background checks" />
+            <TextBlock Text="{Binding ScheduleStatus}" Style="{StaticResource Muted}" Margin="0,10,0,0" />
+                <Grid Margin="0,16,0,0">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="200" />
+                  </Grid.ColumnDefinitions>
+                  <StackPanel>
+                    <TextBlock Text="Scan schedule" />
+                    <TextBlock Margin="0,5,20,0" Style="{StaticResource Muted}" Text="Runs while the app is open or in the tray. Never installs updates." />
+                  </StackPanel>
+                  <ComboBox AutomationProperties.Name="Background check schedule" Grid.Column="1" ItemsSource="{Binding Schedules}" SelectedItem="{Binding Settings.Schedule}" />
+                </Grid>
+                <CheckBox Content="Allow scheduled checks on metered connections" IsChecked="{Binding Settings.AllowMeteredChecks}" />
+                <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                  <TextBlock Margin="0,0,16,0" Text="Quiet hours (local, 0–23)" VerticalAlignment="Center" />
+                  <TextBox AutomationProperties.Name="Quiet hours start" Text="{Binding QuietStartText,UpdateSourceTrigger=PropertyChanged}" Width="58" />
+                  <TextBlock Margin="8,0" Text=" to " VerticalAlignment="Center" />
+                  <TextBox AutomationProperties.Name="Quiet hours end" Text="{Binding QuietEndText,UpdateSourceTrigger=PropertyChanged}" Width="58" />
+                </StackPanel>
+                <local:LiveStatusTextBlock Foreground="{DynamicResource AccentBrush}" Margin="0,12,0,0" Text="{Binding SettingsValidationMessage}" Visibility="{Binding HasSettingsValidationError,Converter={StaticResource Visible}}" />
+                <TextBlock Margin="0,14,0,0" Style="{StaticResource Muted}" Text="Scheduled checks pause during battery saver, offline use, and quiet hours. No service, scheduled task, or startup entry is created." />
+              </StackPanel>
+            </Border>
+            <Border Margin="0,0,0,16" Style="{StaticResource Card}">
+              <StackPanel>
+                <TextBlock FontSize="20" FontWeight="SemiBold" Text="Portable application discovery" />
+                <TextBlock Margin="0,10,0,12" Style="{StaticResource Muted}" Text="Opt in to specific folders. Reads executable metadata at two levels, excludes reparse directories, and never runs discovered files." />
+                <ItemsControl ItemsSource="{Binding PortableFolders}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <DockPanel Margin="0,4">
+                        <Button Command="{Binding DataContext.RemoveFolderCommand,RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" Content="Remove" DockPanel.Dock="Right" Margin="8,0,0,0" />
+                        <Button Command="{Binding DataContext.ExcludeFolderCommand,RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" Content="Exclude" DockPanel.Dock="Right" Margin="8,0,0,0" />
+                        <TextBlock Text="{Binding}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                      </DockPanel>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Button Command="{Binding AddFolderCommand}" Content="Add folder" HorizontalAlignment="Left" Margin="0,10,0,0" />
+              </StackPanel>
+            </Border>
+            <Border Margin="0,0,0,16" Style="{StaticResource Card}">
+              <StackPanel>
+                <TextBlock FontSize="20" FontWeight="SemiBold" Text="Excluded folders" />
+                <TextBlock Margin="0,10,0,12" Style="{StaticResource Muted}" Text="These locations are excluded from optional portable and plugin discovery. Allowing a folder removes its exclusion; add it to the selected folders if you want to scan it." />
+                <ItemsControl ItemsSource="{Binding ExcludedFolders}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <DockPanel Margin="0,4">
+                        <Button Command="{Binding DataContext.AllowFolderCommand,RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" Content="Allow folder" DockPanel.Dock="Right" Margin="12,0,0,0" />
+                        <TextBlock Text="{Binding}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                      </DockPanel>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+            </Border>
+            <Border Margin="0,0,0,16" Style="{StaticResource Card}">
+              <StackPanel>
+                <TextBlock FontSize="20" FontWeight="SemiBold" Text="Audio-plugin inventory" />
+                <CheckBox Content="Discover VST2, VST3 and CLAP plugin modules" IsChecked="{Binding Settings.AudioPluginInventory}" Margin="0,16,0,12" />
+                <TextBlock Style="{StaticResource Muted}" Text="Optional metadata scan of standard VST3/CLAP locations, the registered VST2 folder, and folders you add. Reads PE exports and version resources without loading plugin code. Presets, samples and licenses are not changed." />
+                <ItemsControl ItemsSource="{Binding AudioPluginFolders}" Margin="0,12">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <DockPanel Margin="0,6">
+                        <Button Command="{Binding DataContext.RemoveAudioPluginFolderCommand,RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" Content="Remove" DockPanel.Dock="Right" Margin="12,0,0,0" />
+                        <TextBlock Text="{Binding}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                      </DockPanel>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <WrapPanel>
+                  <Button Command="{Binding AddAudioPluginFolderCommand}" Content="Add plugin folder" Margin="0,0,10,0" />
+                  <Button Command="{Binding ViewAudioPluginsCommand}" Content="View plugin modules" />
+                </WrapPanel>
+                <TextBlock Margin="0,12,0,0" Style="{StaticResource Muted}" Text="Save preferences, then scan. Plugin modules appear in the Audio plugins filter; individual instruments inside a module are not enumerated." />
+              </StackPanel>
+            </Border>
+            <Border Margin="0,0,0,16" Style="{StaticResource Card}">
+              <StackPanel>
+                <TextBlock FontSize="20" FontWeight="SemiBold" Text="Inventory &amp; migration" />
+                <TextBlock Margin="0,10,0,14" Style="{StaticResource Muted}" Text="Export recognized IDs and preferences without credentials or license keys. Imported manifests open a preview; automatic reinstall is not supported." />
+                <WrapPanel>
+                  <Button Command="{Binding ExportCommand}" Content="Export inventory" Margin="0,0,8,0" />
+                  <Button Command="{Binding ImportCommand}" Content="Import preview" Margin="0,0,8,0" />
+                  <Button Command="{Binding DiagnosticsCommand}" Content="Export diagnostics" />
+                </WrapPanel>
+              </StackPanel>
+            </Border>
+            <Border Margin="0,0,0,16" Style="{StaticResource Card}">
+              <StackPanel>
+                <TextBlock FontSize="20" FontWeight="SemiBold" Text="Update sources" />
+                <ItemsControl ItemsSource="{Binding Providers}" Margin="0,14,0,0">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <StackPanel Margin="0,7">
+                        <TextBlock FontWeight="SemiBold" Text="{Binding Name}" />
+                        <TextBlock Margin="0,5,0,0" Style="{StaticResource Muted}" Text="{Binding Message}" />
+                      </StackPanel>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+            </Border>
+            <Border Margin="0,0,0,16" Style="{StaticResource Card}">
+              <StackPanel>
+                <TextBlock FontSize="20" FontWeight="SemiBold" Text="Storage &amp; release status" />
+                <TextBlock Margin="0,10,0,12" Style="{StaticResource Muted}" Text="{Binding Storage}" />
+                <TextBlock Style="{StaticResource Muted}" Text="UpdateDeck 2.0.0 · Unsigned development release. No official first-party update feed or trusted signing credentials are configured. Self-update is not operational." />
+              </StackPanel>
+            </Border>
+            <Button Command="{Binding SaveCommand}" Content="Save preferences" HorizontalAlignment="Left" Margin="0,0,0,20" Padding="24,12" Style="{StaticResource PrimaryButton}" />
+          </StackPanel>
+        </ScrollViewer>
+        <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="10" Grid.Row="1" HorizontalAlignment="Right" Margin="0,0,0,8" Padding="20" Panel.ZIndex="3" Visibility="{Binding HasSelection,Converter={StaticResource Visible}}" Width="350">
+          <DockPanel>
+            <StackPanel DockPanel.Dock="Top">
+              <Button Command="{Binding CloseDetailsCommand}" Content="Close details  ×" HorizontalAlignment="Right" />
+              <TextBlock FontSize="21" FontWeight="SemiBold" Margin="0,16,0,10" Text="{Binding SelectedApp.Name}" TextWrapping="Wrap" />
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Bottom" Margin="0,14,0,0">
+              <Button Command="{Binding IgnoreCommand}" Content="{Binding IgnoreLabel}" />
+              <Button Command="{Binding DetailsActionCommand}" Content="{Binding DetailActionLabel}" Margin="0,8,0,0" />
+              <Button Command="{Binding ReviewInteractiveCommand}" Content="Review interactive update" Margin="0,8,0,0" Visibility="{Binding SelectedApp.CanChooseInteractive,Converter={StaticResource Visible}}" />
+            </StackPanel>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+              <TextBlock FontSize="12" Foreground="{DynamicResource MutedBrush}" Text="{Binding Details}" TextWrapping="Wrap" />
+            </ScrollViewer>
+          </DockPanel>
+        </Border>
+        <Border Grid.Row="0" Margin="0,0,0,12" Padding="14,10" Style="{StaticResource Card}" Visibility="{Binding ShowUpdateQueue,Converter={StaticResource Visible}}">
+          <StackPanel>
+            <TextBlock FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource AccentBrush}" Text="{Binding QueueHeading}" />
+            <TextBlock Margin="0,8,0,8" Text="{Binding QueueText}" TextWrapping="Wrap" />
+            <ProgressBar Height="3" IsIndeterminate="{Binding QueueAnimation}" Margin="0,0,0,10" Visibility="{Binding QueueAnimation,Converter={StaticResource Visible}}" />
+            <WrapPanel Visibility="{Binding IsPlanPreview,Converter={StaticResource Visible}}">
+              <Button Command="{Binding UpdateAllCommand}" Content="Update All" Margin="0,0,8,0" Style="{StaticResource PrimaryButton}" />
+              <Button Command="{Binding PreviewPlanCommand}" Content="Refresh preview" Margin="0,0,8,0" />
+              <Button Command="{Binding LeavePlanCommand}" Content="Back to applications" />
+            </WrapPanel>
+            <WrapPanel Visibility="{Binding IsPlanPreview,Converter={StaticResource Visible},ConverterParameter=Invert}">
+              <Button Command="{Binding PauseCommand}" Content="{Binding PauseLabel}" Margin="0,0,8,0" />
+              <Button Command="{Binding CancelCommand}" Content="Cancel pending" Margin="0,0,8,0" />
+              <Button Command="{Binding SkipCommand}" Content="Skip next" Margin="0,0,8,0" />
+              <Button Command="{Binding RetryCommand}" Content="Retry failures" Margin="0,0,8,0" />
+              <Button Command="{Binding ScanCommand}" Content="Recheck remaining" />
+            </WrapPanel>
+            <CheckBox Content="Show plan, progress and deferred reasons" IsChecked="{Binding QueueDetailsExpanded}" Margin="0,10,0,0" />
+          </StackPanel>
+        </Border>
+        <Border ClipToBounds="True" Grid.Row="1" Padding="14,10" Style="{StaticResource Card}">
+          <Border.Visibility>
+            <MultiBinding Converter="{StaticResource QueueDetailsVisible}">
+              <Binding Path="Page" />
+              <Binding Path="QueueDetailsExpanded" />
+              <Binding Path="ShowVendors" />
+            </MultiBinding>
+          </Border.Visibility>
+          <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+              <ItemsControl ItemsSource="{Binding PreviewActions}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <TextBlock Margin="0,5" Text="{Binding}" TextWrapping="Wrap" />
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <ItemsControl ItemsSource="{Binding Operations}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <TextBlock Margin="0,4" TextWrapping="Wrap"><Run Text="{Binding Name,Mode=OneWay}" /><Run Text=" · " /><Run Text="{Binding ResultLabel,Mode=OneWay}" /><Run Text=" · " /><Run Text="{Binding Message,Mode=OneWay}" /></TextBlock>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <ItemsControl ItemsSource="{Binding DeferredView}">
+                <ItemsControl.GroupStyle><StaticResource ResourceKey="SoftwareGroups"/></ItemsControl.GroupStyle>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <TextBlock Foreground="{DynamicResource MutedBrush}" Margin="0,4" TextWrapping="Wrap"><Run Text="{Binding App.Name,Mode=OneWay}" /><Run Text=" · Deferred: " /><Run Text="{Binding Reason,Mode=OneWay}" /></TextBlock>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </StackPanel>
+          </ScrollViewer>
+        </Border>
+      </Grid>
+      <StackPanel Grid.Row="3" Margin="0,16,0,0">
+        <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,12,0,0">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+              <local:LiveStatusTextBlock FontSize="11" Text="{Binding FooterActivity}" TextWrapping="Wrap" />
+              <TextBlock FontSize="10" Foreground="{DynamicResource MutedBrush}" Margin="0,5,0,0" Text="{Binding LastScan}" />
+            </StackPanel>
+            <TextBlock FontSize="10" Foreground="{DynamicResource MutedBrush}" Grid.Column="1" Margin="20,0,0,0" Text="{Binding SourceSummary}" VerticalAlignment="Center" />
+          </Grid>
+        </Border>
+        <ProgressBar Foreground="{DynamicResource AccentBrush}" Height="3" IsIndeterminate="{Binding ScanAnimation}" Margin="0,10,0,0" Visibility="{Binding ScanAnimation,Converter={StaticResource Visible}}" />
+      </StackPanel>
+    </Grid>
+  </Grid>
+</Window>

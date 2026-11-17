@@ -1,0 +1,9 @@
+<Project>
+  <!-- The official SDK factory and engine must match the target process architecture. -->
+  <ItemGroup>
+    <Content Include="$(PkgMicrosoft_WindowsPackageManager_InProcCom)/runtimes/$(RuntimeIdentifier)/native/Microsoft.Management.Deployment.InProc.dll" Link="Microsoft.Management.Deployment.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="$(PkgMicrosoft_WindowsPackageManager_InProcCom)/runtimes/$(RuntimeIdentifier)/native/Microsoft.Management.Deployment.InProc.dll.manifest" Link="Microsoft.Management.Deployment.dll.manifest" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="$(PkgMicrosoft_WindowsPackageManager_InProcCom)/runtimes/$(RuntimeIdentifier)/native/WindowsPackageManager.dll" Link="WindowsPackageManager.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="$(PkgMicrosoft_WindowsPackageManager_InProcCom)/runtimes/$(RuntimeIdentifier)/native/WindowsPackageManager.pri" Link="WindowsPackageManager.pri" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="Exists('$(PkgMicrosoft_WindowsPackageManager_InProcCom)/runtimes/$(RuntimeIdentifier)/native/WindowsPackageManager.pri')" />
+  </ItemGroup>
+</Project>

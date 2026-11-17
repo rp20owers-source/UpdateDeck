@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>net10.0-windows10.0.26100.0</TargetFramework><SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion><RuntimeIdentifier>win-x64</RuntimeIdentifier><IsPackable>false</IsPackable><IsTestProject>true</IsTestProject></PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" PrivateAssets="all" />
+    <ProjectReference Include="../../src/UpdateDeck.Core/UpdateDeck.Core.csproj" />
+    <ProjectReference Include="../../src/UpdateDeck.Windows/UpdateDeck.Windows.csproj" />
+    <ProjectReference Include="../UpdateDeck.TestInstaller/UpdateDeck.TestInstaller.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+  <Target Name="CopyFixture" AfterTargets="Build"><ItemGroup><Fixture Include="../UpdateDeck.TestInstaller/bin/$(Configuration)/net10.0/UpdateDeck.TestInstaller.*" /></ItemGroup><Copy SourceFiles="@(Fixture)" DestinationFolder="$(OutDir)helpers" /></Target>
+</Project>

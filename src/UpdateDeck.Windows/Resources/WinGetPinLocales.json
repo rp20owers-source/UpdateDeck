@@ -1,0 +1,134 @@
+[
+  {
+    "locale": "en-US",
+    "noPins": "There are no pins configured.",
+    "headers": [
+      "Name",
+      "Id",
+      "Version",
+      "Source",
+      "Pin type",
+      "Pinned version"
+    ]
+  },
+  {
+    "locale": "de-DE",
+    "noPins": "Es sind keine Pins konfiguriert.",
+    "headers": [
+      "Name",
+      "ID",
+      "Version",
+      "Quelle",
+      "Stecknadeltyp",
+      "Angeheftete Version"
+    ]
+  },
+  {
+    "locale": "es-ES",
+    "noPins": "No hay anclajes configurados.",
+    "headers": [
+      "Nombre",
+      "Id",
+      "Versión",
+      "Origen",
+      "Tipo de anclaje",
+      "Versión anclada"
+    ]
+  },
+  {
+    "locale": "fr-FR",
+    "noPins": "Aucune épingle n’est configurée.",
+    "headers": [
+      "Nom",
+      "ID",
+      "Version",
+      "Source",
+      "Type d’épingle",
+      "Version épinglée"
+    ]
+  },
+  {
+    "locale": "it-IT",
+    "noPins": "Nessun PIN configurato.",
+    "headers": [
+      "Nome",
+      "Id",
+      "Versione",
+      "Origine",
+      "Tipo di pin",
+      "Versione aggiunta"
+    ]
+  },
+  {
+    "locale": "ja-JP",
+    "noPins": "ピンが構成されていません。",
+    "headers": [
+      "名前",
+      "ID",
+      "バージョン",
+      "ソース",
+      "ピンの種類",
+      "ピン留めされたバージョン"
+    ]
+  },
+  {
+    "locale": "ko-KR",
+    "noPins": "구성된 핀이 없습니다.",
+    "headers": [
+      "이름",
+      "장치 ID",
+      "버전",
+      "원본",
+      "고정 유형",
+      "고정된 버전"
+    ]
+  },
+  {
+    "locale": "pt-BR",
+    "noPins": "Não há martcadores configurados.",
+    "headers": [
+      "Nome",
+      "ID",
+      "Versão",
+      "Origem",
+      "Tipo de marcador",
+      "Versão fixada"
+    ]
+  },
+  {
+    "locale": "ru-RU",
+    "noPins": "Закрепления не настроены.",
+    "headers": [
+      "Имя",
+      "ИД",
+      "Версия",
+      "Источник",
+      "Тип закрепления",
+      "Закрепленная версия"
+    ]
+  },
+  {
+    "locale": "zh-CN",
+    "noPins": "没有已配置包钉。",
+    "headers": [
+      "名称",
+      "ID",
+      "版本",
+      "源",
+      "包钉类型",
+      "固定版本"
+    ]
+  },
+  {
+    "locale": "zh-TW",
+    "noPins": "沒有經過設定的釘選。",
+    "headers": [
+      "名稱",
+      "識別碼",
+      "版本",
+      "來源",
+      "釘選類型",
+      "已釘選的版本"
+    ]
+  }
+]

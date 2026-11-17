@@ -1,0 +1,11 @@
+UpdateDeck 2.0.0
+
+This is an unsigned development release. No publicly trusted publisher certificate or first-party update feed is configured. Respect Windows and organizational application-control decisions.
+
+The application bundles .NET 10.0.15 and runs without a .NET SDK. It requires Windows 10 build 19041 or newer. Windows 10 technical compatibility does not imply ongoing Microsoft security support.
+
+Setup defaults to the current user. You can select all users using standard administrator elevation. Existing settings and history in LocalAppData\UpdateDeck are preserved on upgrade and uninstall. Setup does not create a service, scheduled task, startup entry, or PATH modification.
+
+Close UpdateDeck and wait for any active installer to finish before upgrading or uninstalling. Setup will not force-close an update operation.
+
+WinGet execution requires Microsoft's installed App Installer/WinGet CLI. Applications without a supported update source remain visible with unknown status or an official vendor handoff. Updates may require normal UAC, agreements, or publisher authentication. Driver/firmware updates remain supervised.
